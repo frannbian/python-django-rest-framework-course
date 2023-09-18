@@ -1,19 +1,16 @@
 import requests
-from getpass import getpass
 
-auth_endpoint = "http://localhost:8000/api/auth/" 
-username = input("What is your username?\n")
-password = getpass("What is your password?\n")
+# endpoint = "https://httpbin.org/status/200/"
+# endpoint = "https://httpbin.org/anything"
+endpoint = "http://localhost:8000/api/" #http://127.0.0.1:8000/ 
 
-auth_response = requests.post(auth_endpoint, json={'username': username, 'password': password}) 
-print(auth_response.json())
+get_response = requests.post(endpoint, json={"title": "Abc123", "content": "Hello world", "price": "abc134"}) # HTTP Request
+# print(get_response.headers)
+# print(get_response.text) # print raw text response
+# print(get_response.status_code)
 
-if auth_response.status_code == 200:
-    token = auth_response.json()['token']
-    headers = {
-        "Authorization": f"Bearer {token}"
-    }
-    endpoint = "http://localhost:8000/api/products/" 
-
-    get_response = requests.get(endpoint, headers=headers) 
-    print(get_response.json())
+# HTTP Request -> HTML
+# REST API HTTP Request -> JSON
+# JavaScript Object Nototion ~ Python Dict
+print(get_response.json())
+# print(get_response.status_code)

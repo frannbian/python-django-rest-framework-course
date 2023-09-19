@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import datetime
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     # third party api services
     'algoliasearch_django',
     # third party packages
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
 
     # internal apps
     'api',
@@ -53,6 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -61,6 +64,14 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'cfehome.urls'
+CORS_URLS_REGEX = r"^/api/.*"
+CORS_ALLOWED_ORIGINS = []
+
+if DEBUG:
+    CORS_ALLOWED_ORIGINS += [
+        'http://localhost:8111',
+        'https://localhost:8111',
+    ]
 
 TEMPLATES = [
     {
@@ -139,7 +150,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
-        "api.authentication.TokenAuthentication"
+         "api.authentication.TokenAuthentication",
+         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly"
@@ -151,6 +163,13 @@ REST_FRAMEWORK = {
 # environment variables -> django-dotenv -> reads .env
 ALGOLIA = {
     'APPLICATION_ID': '4IHLYNCMBJ',
-    'API_KEY': 'ed979c53f86fdc2fe8ba66f0e92b148c',
+    'API_KEY': '4b063049ede11d6f623e7cf47ef6c336',
     'INDEX_PREFIX': 'cfe'
+}
+
+
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ["Bearer"],
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(seconds=30), # minutes=5
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(minutes=1), # days=1
 }
